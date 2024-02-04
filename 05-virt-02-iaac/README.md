@@ -14,7 +14,8 @@
 
 ### Цели задания
 
-1. Научиться создавать виртуальную машину Virtualbox с помощью Vagrant.
+1. Научиться создвать виртуальные машины в Virtualbox с помощью Vagrant.
+2. Научиться базовому использованию packer в yandex cloud.
 
    
 ## Задача 1
@@ -23,19 +24,19 @@
 - [VirtualBox](https://www.virtualbox.org/),
 - [Vagrant](https://github.com/netology-code/devops-materials), рекомендуем версию 2.3.4
 - [Packer](https://github.com/netology-code/devops-materials/blob/master/README.md) версии 1.9.х + плагин от Яндекс Облако по [инструкции](https://cloud.yandex.ru/docs/tutorials/infrastructure-management/packer-quickstart)
+- [уandex cloud cli](https://cloud.yandex.com/ru/docs/cli/quickstart) Так же инициализируйте профиль с помощью ```yc init``` .
+
 
 Примечание: Облачная ВМ с Linux в данной задаче не подойдёт из-за ограничений облачного провайдера. У вас просто не установится virtualbox.
 
 ## Задача 2
 
 1. Убедитесь, что у вас есть ssh ключ в ОС или создайте его с помощью команды ```ssh-keygen -t ed25519```
-2. Создайте виртуальную машину Virtualbox с помощью Vagrant.
+2. Создайте виртуальную машину Virtualbox с помощью Vagrant и  [Vagrantfile](https://github.com/netology-code/virtd-homeworks/blob/shvirtd-1/05-virt-02-iaac/src/Vagrantfile) в директории src.
 3. Зайдите внутрь ВМ и убедитесь, что Docker установлен с помощью команды:
 ```
 docker version && docker compose version
 ```
-
-Примечание: Vagrantfile находятся в [директории](https://github.com/netology-code/virt-homeworks/tree/virt-11/05-virt-02-iaac/src).
 
 3. Если Vagrant выдаёт ошибку (блокировка трафика):
 ```
@@ -55,13 +56,17 @@ Error: The requested URL returned error: 404:
 `Stderr: VBoxManage: error: AMD-V VT-X is not available (VERR_SVM_NO_SVM)`   
  Попробуйте в этом случае выполнить в Windows от администратора команду `bcdedit /set hypervisorlaunchtype off` и перезагрузиться.
 
+- Если ваша рабочая станция в меру различных факторов не может запустить вложенную виртуализацию - допускается неполное выполнение(до ошибки запуска ВМ)
+
 ## Задача 3
 
-1. Отредактируйте файл mydebian.json или mydebian.json.pkr.hcl в директории src (packer умеет и в json, и в hcl форматы):
-   - добавьте в скрипт установку docker (возьмите готовый bash-скрипт из Vagrantfile или документации к docker),
-   - установите в данном образе htop и tmux.
-3. Найдите свой образ в web консоли yandex_cloud  или с помощью утилиты командной строки "yc tool".
-4. Создайте новую ВМ (минимальные параметры) в облаке, используя данный образ.
-5. Подключитесь по ssh и убедитесь в наличии установленного docker.
-6. Удалите ВМ и образ.
-7. **ВНИМАНИЕ!** Никогда не выкладываете oauth token от облака в git-репозиторий! После выполнения задания обязательно удалите секретные данные из файла mydebian.json и mydebian.json.pkr.hcl.
+1. Отредактируйте файл    или  [mydebian.json.pkr.hcl](https://github.com/netology-code/virtd-homeworks/blob/shvirtd-1/05-virt-02-iaac/src/mydebian.json.pkr.hcl)  в директории src (packer умеет и в json, и в hcl форматы):
+   - добавьте в скрипт установку docker (возьмите готовый bash-скрипт из [Vagrantfile](https://github.com/netology-code/virtd-homeworks/blob/shvirtd-1/05-virt-02-iaac/src/Vagrantfile)  или  [документации]( https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)  к docker), 
+   - дополнительно установите в данном образе htop и tmux.(не забудьте про ключ автоматического подтверждения установки для apt)
+3. Найдите свой образ в web консоли yandex_cloud
+4. Необязательное задание(*): найдите в документации yandex cloud как найти свой образ с помощью утилиты командной строки "yc cli".
+5. Создайте новую ВМ (минимальные параметры) в облаке, используя данный образ.
+6. Подключитесь по ssh и убедитесь в наличии установленного docker.
+7. Удалите ВМ и образ.
+8. **ВНИМАНИЕ!** Никогда не выкладываете oauth token от облака в git-репозиторий! Утечка секретного токена может привести к финансовым потерям. После выполнения задания обязательно удалите секретные данные из файла mydebian.json и mydebian.json.pkr.hcl. (замените содержимое токена на  "ххххх")
+9. В качестве ответа на задание  загрузите результирующий файл в ваш ЛК.
